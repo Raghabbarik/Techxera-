@@ -45,24 +45,6 @@ export default function StudentLayout({
     );
   }
   
-  const NavLinks = () => (
-    <>
-      {studentNavItems.map((item) => (
-        <li key={item.href}>
-          <Link href={item.href}>
-            <Button
-              variant={pathname === item.href ? 'secondary' : 'ghost'}
-              className="w-full justify-start"
-            >
-              <item.icon className="mr-2 h-4 w-4" />
-              {item.label}
-            </Button>
-          </Link>
-        </li>
-      ))}
-    </>
-  );
-
   return (
     <div className="grid h-screen w-full pl-[56px]">
       <aside className="inset-y fixed left-0 z-20 flex h-full flex-col border-r">
