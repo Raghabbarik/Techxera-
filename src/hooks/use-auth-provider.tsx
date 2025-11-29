@@ -44,14 +44,12 @@ export const AuthProviderComponent = ({ children }: { children: ReactNode }) => 
           const appUser = { uid: firebaseUser.uid, ...userDoc.data() } as AppUser;
           setUser(appUser);
           
-          if (pathname === '/') {
-            if (appUser.role === 'student') {
-              router.replace('/student/dashboard');
-            } else if (appUser.role === 'teacher') {
-              router.replace('/teacher/dashboard');
-            } else if (appUser.role === 'admin') {
-                router.replace('/admin/dashboard');
-            }
+          if (appUser.role === 'student') {
+            router.replace('/student/dashboard');
+          } else if (appUser.role === 'teacher') {
+            router.replace('/teacher/dashboard');
+          } else if (appUser.role === 'admin') {
+              router.replace('/admin/dashboard');
           }
         } else {
           // If the user exists in auth but not in firestore, log them out.
