@@ -44,9 +44,7 @@ export const AuthProviderComponent = ({ children }: { children: ReactNode }) => 
           const appUser = { uid: firebaseUser.uid, ...userDoc.data() } as AppUser;
           setUser(appUser);
           
-          const isAuthPage = pathname === '/';
-          
-          if (isAuthPage) {
+          if (pathname === '/') {
             if (appUser.role === 'student') {
               router.replace('/student/dashboard');
             } else if (appUser.role === 'teacher') {
