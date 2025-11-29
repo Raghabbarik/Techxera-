@@ -40,6 +40,7 @@ export const AuthProviderComponent = ({ children }: { children: ReactNode }) => 
       if (firebaseUser) {
         const userDocRef = doc(db, 'users', firebaseUser.uid);
         const userDoc = await getDoc(userDocRef);
+
         if (userDoc.exists()) {
           const appUser = { uid: firebaseUser.uid, ...userDoc.data() } as AppUser;
           setUser(appUser);
@@ -51,19 +52,19 @@ export const AuthProviderComponent = ({ children }: { children: ReactNode }) => 
           };
           const targetDashboard = roleDashboardMap[appUser.role];
 
-          if (targetDashboard && pathname !== targetDashboard) {
+          // If user is on the login page, redirect them to their dashboard
+          if (pathname === '/') {
             router.replace(targetDashboard);
           }
-
         } else {
-          // If the user exists in auth but not in firestore, log them out.
+          // If user exists in auth but not in firestore, log out and redirect.
           await auth.signOut();
           setUser(null);
           router.replace('/');
         }
       } else {
         setUser(null);
-        // if not logged in, and not on the login page, redirect to login
+        // If user is not logged in and not on the login page, redirect to login.
         if (pathname !== '/') {
             router.replace('/');
         }
