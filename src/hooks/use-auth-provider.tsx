@@ -31,12 +31,12 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProviderComponent = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<AppUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const [initialLoad, setInitialLoad] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser: User | null) => {
-      setLoading(true);
       if (firebaseUser) {
         const userDocRef = doc(db, 'users', firebaseUser.uid);
         const userDoc = await getDoc(userDocRef);
@@ -52,30 +52,28 @@ export const AuthProviderComponent = ({ children }: { children: ReactNode }) => 
           };
           const targetDashboard = roleDashboardMap[appUser.role];
 
-          // If user is on the login page, redirect them to their dashboard
           if (pathname === '/') {
             router.replace(targetDashboard);
           }
         } else {
-          // If user exists in auth but not in firestore, log out and redirect.
           await auth.signOut();
           setUser(null);
           router.replace('/');
         }
       } else {
         setUser(null);
-        // If user is not logged in and not on the login page, redirect to login.
         if (pathname !== '/') {
             router.replace('/');
         }
       }
+      setInitialLoad(false);
       setLoading(false);
     });
 
     return () => unsubscribe();
-  }, [pathname, router]);
+  }, []);
 
-  if (loading) {
+  if (initialLoad) {
     return (
         <div className="flex h-screen w-full items-center justify-center">
             <div className="flex flex-col items-center space-y-4">
